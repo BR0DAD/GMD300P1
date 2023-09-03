@@ -8,6 +8,7 @@ public class FirstPersonController : MonoBehaviour
 {
     public float MoveSpeed;
     public float RotationSpeed;
+    private float verticalMovement = 0;
 
     public InputActionAsset CharacterActionAsset;
 
@@ -17,6 +18,12 @@ public class FirstPersonController : MonoBehaviour
     private InputAction rotateAction;
 
     private CharacterController characterController;
+
+    //Vector Variables for frame inputs
+    private Vector2 inputMovement = Vector2.zero;
+    private Vector2 previousFrameInputMovement = Vector2.zero;
+    private Vector2 inputRotation = Vector2.zero;
+    private Vector2 previousFrameInputRotation = Vector2.zero;
 
     private Vector2 moveValue = Vector2.zero;
     private Vector2 rotateValue = Vector2.zero;
@@ -45,7 +52,7 @@ public class FirstPersonController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        moveValue = moveAction.ReadValue<Vector2>() * MoveSpeed * Time.deltaTime;
+      
         rotateValue = rotateAction.ReadValue<Vector2>() * Time.deltaTime * RotationSpeed;
 
         currentRotationAngle = new Vector3(currentRotationAngle.x - rotateValue.y, currentRotationAngle.y + rotateValue.x, 0);
@@ -54,7 +61,22 @@ public class FirstPersonController : MonoBehaviour
 
         FirstPersonCamera.transform.rotation = Quaternion.Euler(currentRotationAngle);
 
-        characterController.Move(new Vector3(moveValue.x, 0, moveValue.y));
+        //GRAVITY
+        verticalMovement = 0;
+        verticalMovement += Physics.gravity.y * Time.deltaTime;
+
+        LookMovement();
+
+    }
+
+   private void LookMovement() 
+    {
+        moveValue = moveAction.ReadValue<Vector2>() * MoveSpeed * Time.deltaTime;
+        Vector3 MoveDirection = FirstPersonCamera.transform.forward * moveValue.y + FirstPersonCamera.transform.right * moveValue.x;
+        MoveDirection.y = 0;
+        MoveDirection.y += verticalMovement;
+        characterController.Move(MoveDirection);
+
     }
 
     void OnDrawGizmos ()
