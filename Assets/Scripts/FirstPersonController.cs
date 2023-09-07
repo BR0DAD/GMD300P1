@@ -61,7 +61,7 @@ public class FirstPersonController : MonoBehaviour
 
         FirstPersonCamera.transform.rotation = Quaternion.Euler(currentRotationAngle);
 
-        //GRAVITY
+        //GRAVITY (Probably will want to use in a different function later)
         verticalMovement = 0;
         verticalMovement += Physics.gravity.y * Time.deltaTime;
 
