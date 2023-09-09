@@ -29,6 +29,16 @@ public class FirstPersonController : MonoBehaviour
     private Vector2 rotateValue = Vector2.zero;
     private Vector3 currentRotationAngle = Vector3.zero;
 
+    //Jump
+    public float MaxJumpHeight = 1;
+    public LayerMask GroundLayer;
+    public float GroundCheckRadius = 0.25f;
+    public Transform GroundCheck;
+
+    private InputAction jumpAction;
+    private bool isJumping = false;
+    private bool isGrounded = false;
+
     private void OnEnable()
     {
         CharacterActionAsset.FindActionMap("Gameplay").Enable();
@@ -47,6 +57,8 @@ public class FirstPersonController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        jumpAction = CharacterActionAsset.FindActionMap("Gameplay").FindAction("Jump");
     }
 
     // Update is called once per frame
@@ -60,22 +72,19 @@ public class FirstPersonController : MonoBehaviour
         currentRotationAngle = new Vector3(Mathf.Clamp(currentRotationAngle.x, -85, 85), currentRotationAngle.y, currentRotationAngle.z);
 
         FirstPersonCamera.transform.rotation = Quaternion.Euler(currentRotationAngle);
-
-        //GRAVITY (Probably will want to use in a different function later)
-        verticalMovement = 0;
-        verticalMovement += Physics.gravity.y * Time.deltaTime;
+        
 
         LookMovement();
-
+        ProcessJump();
     }
 
    private void LookMovement() 
     {
-        moveValue = moveAction.ReadValue<Vector2>() * MoveSpeed * Time.deltaTime;
+        moveValue = moveAction.ReadValue<Vector2>() * MoveSpeed;
         Vector3 MoveDirection = FirstPersonCamera.transform.forward * moveValue.y + FirstPersonCamera.transform.right * moveValue.x;
         MoveDirection.y = 0;
         MoveDirection.y += verticalMovement;
-        characterController.Move(MoveDirection);
+        characterController.Move(MoveDirection*Time.deltaTime);
 
     }
 
@@ -85,4 +94,27 @@ public class FirstPersonController : MonoBehaviour
         Gizmos.DrawSphere(transform.position, 0.5f);
     }
 
+    private void ProcessJump()
+    {
+        isGrounded = Physics.CheckSphere(GroundCheck.position, GroundCheckRadius, GroundLayer);
+
+
+        if (characterController.isGrounded && verticalMovement < 0)
+        {
+            isJumping = false;
+            verticalMovement = 0;
+        }
+        if (isGrounded && !isJumping)
+        {
+            bool JumpButtonDown = jumpAction.triggered && jumpAction.ReadValue<float>() > 0;
+            if (JumpButtonDown)
+            {
+                float Jumpforce = Mathf.Sqrt(-2 * MaxJumpHeight * Physics.gravity.y);
+                verticalMovement += Jumpforce;
+                isJumping = true;
+            }
+        }
+        verticalMovement += Physics.gravity.y * Time.deltaTime;
+        characterController.Move(Vector3.up*verticalMovement*Time.deltaTime);
+    }
 }
