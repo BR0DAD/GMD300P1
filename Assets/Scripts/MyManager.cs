@@ -34,4 +34,18 @@ public class MyManager : MonoBehaviour
     {
         playerScore += ScoreToAdd;
     }
+    public void RemoveScore(int ScoreToRemove) 
+    {
+        playerScore -= ScoreToRemove;
+
+        if(playerScore < 0)
+        {
+            playerScore = 0;
+        }
+    }
+
+    public int GetScoreTotal()
+    {
+        return playerScore;
+    }
 }
