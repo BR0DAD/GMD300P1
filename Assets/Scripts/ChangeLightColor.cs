@@ -9,4 +9,8 @@ public class ChangeLightColor : MonoBehaviour
     {
         GetComponent<Light>().color = newColor;
     }
+    public void ChangleColorBack()
+    {
+        GetComponent<Light>().color = Color.black;
+    }
 }
