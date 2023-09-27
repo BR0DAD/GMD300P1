@@ -8,6 +8,13 @@ public class DoorCheck : MonoBehaviour
 
     private int lastUpdatedSlot = 0;
 
+    private Animator animator;
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+        animator.SetBool("isOpened", false);
+    }
     private void Update()
     {
         if (MyManager.Instance.GetScoreTotal() > lastUpdatedSlot)
@@ -17,8 +24,11 @@ public class DoorCheck : MonoBehaviour
 
             if (lastUpdatedSlot == CollectibleRequired)
             {
-                Destroy(this.gameObject);
+                animator.SetBool("isOpened", true);
+                MyManager.Instance.playerScore = 0;
             }
         }
     }
+
+    
 }
