@@ -10,11 +10,13 @@ public class DoorCheck : MonoBehaviour
 
     private Animator animator;
 
+    //on awake grabs the animation components required for the door animation 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         animator.SetBool("isOpened", false);
     }
+    //checks constantly for whatever the score total is and if the animation should play
     private void Update()
     {
         if (MyManager.Instance.GetScoreTotal() > lastUpdatedSlot)

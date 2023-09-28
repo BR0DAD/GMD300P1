@@ -8,6 +8,8 @@ public class MyManager : MonoBehaviour
 
     public int playerScore = 0;
 
+
+    //ensures only one manager is present
     private void Awake()
     {
         if (Instance == null)
@@ -30,10 +32,13 @@ public class MyManager : MonoBehaviour
         }
     }
 
+    //adds score to the player score when the item gets picked up
     public void AddScore(int ScoreToAdd)
     {
         playerScore += ScoreToAdd;
     }
+
+    //removes score from player 
     public void RemoveScore(int ScoreToRemove) 
     {
         playerScore -= ScoreToRemove;
@@ -44,8 +49,15 @@ public class MyManager : MonoBehaviour
         }
     }
 
+    //returns the player score when the total score is needed
     public int GetScoreTotal()
     {
         return playerScore;
+    }
+
+    //resets score to zero on a failed run
+    public void Reset()
+    {
+        playerScore = 0;
     }
 }

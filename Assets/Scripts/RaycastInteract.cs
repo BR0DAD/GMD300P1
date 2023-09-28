@@ -10,6 +10,8 @@ public class RaycastInteract : MonoBehaviour
 
     public InputActionAsset CharacterInputActions;
     public InputAction InteractAction;
+
+    //finds action maps
     private void Awake()
     {
         CharacterInputActions.FindActionMap("Gameplay").Enable();

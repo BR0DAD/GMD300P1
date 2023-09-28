@@ -11711,6 +11711,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f21b12037cbea449adc4c921b878ff1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playSound:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11500000, guid: 78af49d1b3d835b4380d1a10e9cbd2a5, type: 3}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &894269091915111353
 MonoBehaviour:
   m_ObjectHideFlags: 0

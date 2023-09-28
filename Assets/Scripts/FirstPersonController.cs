@@ -39,6 +39,7 @@ public class FirstPersonController : MonoBehaviour
     private bool isJumping = false;
     private bool isGrounded = false;
 
+    //finds inputs
     private void OnEnable()
     {
         CharacterActionAsset.FindActionMap("Gameplay").Enable();
@@ -78,6 +79,7 @@ public class FirstPersonController : MonoBehaviour
         ProcessJump();
     }
 
+    //helps with look sensitivity
    private void LookMovement() 
     {
         moveValue = moveAction.ReadValue<Vector2>() * MoveSpeed;
@@ -88,12 +90,14 @@ public class FirstPersonController : MonoBehaviour
 
     }
 
+    //debug on player
     void OnDrawGizmos ()
     {
         Gizmos.color = new Vector4(0, 1, 1, 0.5f);
         Gizmos.DrawSphere(transform.position, 0.5f);
     }
 
+    //processes the jump input and makes player jump
     private void ProcessJump()
     {
         isGrounded = Physics.CheckSphere(GroundCheck.position, GroundCheckRadius, GroundLayer);

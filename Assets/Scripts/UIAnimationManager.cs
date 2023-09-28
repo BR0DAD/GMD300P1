@@ -9,6 +9,7 @@ public class UIAnimationManager : MonoBehaviour
 
     private Animator animator;
 
+    //makes it so there is only one animator
     private void Awake()
     {
         if(instance == null)
@@ -31,6 +32,7 @@ public class UIAnimationManager : MonoBehaviour
         }
     }
 
+    //allows the UI for the imteract prompt to show up
     public void ShowInteractPrompt(bool showPrompt)
     {
         animator.SetBool("showInteractionPrompt", showPrompt);
