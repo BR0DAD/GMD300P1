@@ -1,12 +1,22 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 [RequireComponent(typeof(CharacterController))]
 public class ThirdCharacterController : MonoBehaviour
 {
+
+    public Camera Camera;
+    public GameObject BOULDER_Prefab;
+    public Transform projectileReference;
+    
+    public int playerHealth = 3;
+
     public float moveMaxSpeed = 5;
     public float moveAcceleration = 10;
 
@@ -22,6 +32,8 @@ public class ThirdCharacterController : MonoBehaviour
 
     private bool jumpInputPressed = false;
     private bool isJumping = false;
+    public float shootDelay;
+    private float shotTime;
 
     private void Awake()
     {
@@ -30,7 +42,14 @@ public class ThirdCharacterController : MonoBehaviour
 
     private void Update()
     {
-        currentHorizontalVelocity = Vector2.Lerp(currentHorizontalVelocity, moveInput * moveMaxSpeed, Time.deltaTime * moveAcceleration);
+        shotTime -= Time.deltaTime;
+        Vector3 cameraSpaceMovement = new Vector3(moveInput.x, 0, moveInput.y);
+        cameraSpaceMovement = Camera.main.transform.TransformDirection(cameraSpaceMovement);
+      
+
+        Vector2 cameraHorizontalMovement = new Vector2(cameraSpaceMovement.x, cameraSpaceMovement.z);
+
+        currentHorizontalVelocity = Vector2.Lerp(currentHorizontalVelocity, cameraHorizontalMovement * moveMaxSpeed, Time.deltaTime * moveAcceleration);
 
         if(isJumping == false) 
         {
@@ -96,6 +115,13 @@ public class ThirdCharacterController : MonoBehaviour
 
     public void OnAttack(InputValue value)
     {
+
+        if (shotTime > 0)
+        {
+            return;
+        }
+        shotTime = shootDelay;
+        Instantiate(BOULDER_Prefab, projectileReference.position, Quaternion.identity);
         Collider[] overlapItems = Physics.OverlapBox(transform.position, Vector3.one);
 
         if (overlapItems.Length > 0)
@@ -103,11 +129,14 @@ public class ThirdCharacterController : MonoBehaviour
             foreach(Collider item in overlapItems)
             {
                 Vector3 direction = item.transform.position - transform.position;
-                item.SendMessage("OnPlayerAttack", direction, SendMessageOptions.DontRequireReceiver);
+                item.SendMessage("SHOOT", direction, SendMessageOptions.DontRequireReceiver);
             }
         }
     }
 
-
+    public void LoseHealth(int health)
+    {
+        playerHealth -= health;
+    }
 
 }
