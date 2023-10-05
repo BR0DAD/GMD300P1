@@ -147,4 +147,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 4471646399413020770}
-  lifespan: 2
+  lifespan: 7
